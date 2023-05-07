@@ -1,0 +1,890 @@
+// ==UserScript==
+// @name Shovel Knight UC
+// @namespace Pancakes
+// @version 1.0
+// @description A short description of your userscript.
+// @match https://*.undercards.net/*
+// @exclude https://*.undercards.net/*/*
+// @grant none
+// @run-at document-body
+// ==/UserScript==
+
+var plugin = window.underscript.plugin("Shovel2");
+
+plugin.events.on("PrettyCards:customCards", function () {
+	var c = window.prettycards.newCollection({
+		name: "Shovel Knight v2 Set",
+		author: "Pancakes",
+        cardImagePrefix: "https://github.com/PancakesCFG/glowing-waddle/raw/main/imgs/cards/",
+        cardSongPrefix: "https://github.com/PancakesCFG/glowing-waddle/raw/main/imgs/music/",
+        artifactImagePrefix: "https://github.com/PancakesCFG/glowing-waddle/raw/main/imgs/artifacts/",
+        rarityImagePrefix: "https://raw.githubusercontent.com/PancakesCFG/glowing-waddle/master/imgs/rarity/",
+        tribeImagePrefix: "https://github.com/PancakesCFG/glowing-waddle/raw/main/imgs/tribes/",
+        backgroundImagePrefix: "https://github.com/PancakesCFG/glowing-waddle/raw/main/imgs/artifactBGs/",
+		note: `A bunch of custom cards based off of characters in Shovel Knight: Treasure Trove. <br><br> NOTE: This was not made with balancing in mind, and it is just for fun. If you're gonna complain about balancing on a custom card set, go yell in a dumpster. Maybe someone will listen to you then.`
+	});
+
+	var froggit = c.newTribe({
+		name: "{{PLURAL:$1|Froggit|Froggits}}",
+		image: "FROGGIT",
+		id: "FROGGIT"
+	});
+
+	var order = c.newTribe({
+		name: "{{PLURAL:$1|Order of No Quarter|Order of No Quarter}}",
+		image: "ORDER",
+		id: "ORDER"
+	});
+
+	var crystal = c.newTribe({
+		name: "{{PLURAL:$1|Crystal|Crystals}}",
+		image: "CRYSTAL",
+		id: "CRYSTAL"
+	});
+
+	var rat = c.newTribe({
+		name: "{{PLURAL:$1|Rat|Rats}}",
+		image: "RAT",
+		id: "RAT"
+	});
+
+	var spellPower = c.newKeyword({
+		name: "Spell Power",
+		description: "Enemy monsters take +(x) {{DMG}} from spells.",
+		id: "SPELLPOWER"
+	});
+
+plugin.addStyle(`.monster.ext_SHOVEL .cardFrame {
+	background-image: url('https://raw.githubusercontent.com/PancakesCFG/glowing-waddle/master/imgs/frames/frame_monster.png');
+}`);
+
+var flyingmachine = c.newArtifact({
+		name: "Flying Machine",
+		image: "flying_machine",
+		rarity: "TOKEN",
+		description: `Whenever you summon a monster, spend a counter to give it {{KW:HASTE}}.`,
+	});
+
+var potion = c.newArtifact({
+		name: "Ultimate Potion",
+		image: "ultimate_potion",
+		rarity: "DETERMINATION",
+        backgroundClass: "ultimate_potion",
+		description: `Whenever an enemy monster has their stats decreased, double the amount. (Example: If an enemy monster is debuffed by -2 {{ATK}}, debuff it by -4 {{ATK}} instead.)`,
+	});
+
+var locket = c.newArtifact({
+		name: "Keepsake Locket",
+		image: "keepsake_locket",
+		rarity: "TOKEN",
+		description: `Before you spend {{gold}} on {{KW:PROGRAM}} effects, gain {{gold}} equal to half of the {{KW:PROGRAM}}'s {{cost}} (rounded up).`,
+	});
+
+var dirt = c.newCard({
+		name: "{{PLURAL:$1|Dirt Mound|Dirt Mounds}}",
+		image: "dirt_mound",
+		cost: 2,
+		attack: 2,
+		hp: 4,
+        cantAttack: true,
+		description: `{{KW:DISARMED}}. {{KW:TURN-END}}: Deal 2 {{DMG}} to this.`,
+		extension: "SHOVEL",
+		rarity: "TOKEN"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Shovel Knight|Shovel Knights}}",
+		image: "shovel_knight",
+		cost: 10,
+		attack: 6,
+		hp: 10,
+        haste: true,
+		description: `{{KW:HASTE}}. Whenever this attacks and kills a monster, summon a ${dirt.me()} in its place.`,
+		extension: "SHOVEL",
+		rarity: "LEGENDARY"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Shield Knight|Shield Knights}}",
+		image: "shield_knight",
+		cost: 11,
+		attack: 5,
+		hp: 9,
+        armor: true,
+		description: `{{KW:ARMOR}}. All other ally monsters can only take up to 4 {{DMG}} at a time.`,
+		extension: "SHOVEL",
+		rarity: "LEGENDARY"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Black Knight|Black Knights}}",
+		image: "black_knight",
+		cost: 10,
+		attack: 6,
+		hp: 10,
+		description: `{{KW:DELAY}}: Burn all cards in your hand. For each card burned, add a random monster from your dupstile to your hand with +1/+1.`,
+		extension: "SHOVEL",
+		rarity: "LEGENDARY"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|King Knight|King Knights}}",
+		image: "king knight",
+		cost: 6,
+		attack: 4,
+		hp: 6,
+        taunt: true,
+		description: `{{KW:TAUNT}}. {{KW:MAGIC}}: Draw a monster and give it -2 {{cost}}. If it has a different rarity than this, send it back to your deck.`,
+        tribes: [order],
+		extension: "SHOVEL",
+		rarity: "LEGENDARY"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Specter Knight|Specter Knights}}",
+		image: "specter_knight",
+		cost: 7,
+		attack: 6,
+		hp: 6,
+		description: `{{KW:MAGIC}}: Give an ally monster "Instead of dying, return this with -2/-2 base stats (min: 0/1) and without this effect."`,
+        tribes: [order],
+		extension: "SHOVEL",
+		rarity: "LEGENDARY"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Plague Knight|Plague Knights}}",
+		image: "plague_knight",
+		cost: 5,
+		attack: 4,
+		hp: 5,
+        supportEnabled: true,
+		description: `{{KW:MAGIC}}, {{KW:SUPPORT}}, {{KW:TURN-START}} and {{KW:DUST}}: Add a {{CARD:614|2}} to your hand with -2 {{cost}}.`,
+        tribes: [order],
+		extension: "SHOVEL",
+		rarity: "LEGENDARY"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Treasure Knight|Treasure Knights}}",
+		image: "treasure knight",
+		cost: 9,
+		attack: 4,
+		hp: 9,
+		description: `{{KW:DELAY}}: Gain 2 {{gold}} for every unique card you played this turn (besides this).`,
+        tribes: [order],
+		extension: "SHOVEL",
+		rarity: "LEGENDARY"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Mole Knight|Mole Knights}}",
+		image: "mole_knight",
+		cost: 10,
+		attack: 5,
+		hp: 5,
+        dodge: 1,
+		description: `{{KW:DODGE}} (1). {{KW:MAGIC}}: Choose a non-{{RARITY:DETERMINATION}} enemy monster. Send it to your side of the board. {{KW:DUST}}: Send it back.`,
+        tribes: [order],
+		extension: "SHOVEL",
+		rarity: "LEGENDARY"
+    });
+
+var tinker = c.newCard({
+		name: "{{PLURAL:$1|Tinker Tank|Tinker Tanks}}",
+		image: "tinker_tank",
+		cost: 7,
+		attack: 5,
+		hp: 5,
+        taunt: true,
+        haste: true,
+        dodge: 1,
+		description: `{{KW:HASTE}}. {{KW:DODGE}} (1). {{KW:TAUNT}}. {{KW:DUST}}: Deal 3 {{DMG}} to all enemies.`,
+		extension: "SHOVEL",
+		rarity: "TOKEN"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Tinker Knight|Tinker Knights}}",
+		image: "tinker_knight",
+		cost: 2,
+		attack: 2,
+		hp: 2,
+        haste: true,
+		description: `{{KW:HASTE}}. At the start of the game, add 2 copies of this to your deck. {{KW:DUST}}: If all copies of this are in your dustpile, replace this with ${tinker.me()}.`,
+        tribes: [order],
+		extension: "SHOVEL",
+		rarity: "LEGENDARY"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Propeller Knight|Propeller Knights}}",
+		image: "propeller_knight",
+		cost: 8,
+		attack: 4,
+		hp: 7,
+        haste: true,
+		description: `{{KW:HASTE}}. {{KW:MAGIC}}: Add the ${flyingmachine.me()} artifact. {{KW:DELAY}} and {{KW:DUST}}: Give it +3 counters.`,
+        tribes: [order],
+		extension: "SHOVEL",
+		rarity: "LEGENDARY"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Polar Knight|Polar Knights}}",
+		image: "polar_knight",
+		cost: 11,
+		attack: 5,
+		hp: 11,
+        taunt: true,
+		description: `{{KW:TAUNT}}. Whenever this takes {{DMG}} during the enemy turn, deal {{DMG}} to the opponent equal to the amount of {{DMG}} this took.`,
+        tribes: [order],
+		extension: "SHOVEL",
+		rarity: "LEGENDARY"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|The Enchantress|The Enchantresses}}",
+		image: "the_enchantress",
+		cost: 10,
+		attack: 7,
+		hp: 7,
+		description: `{{KW:MAGIC}}: Add a copy of each unique {{TRIBE:ORDER|2}} member in your dustpile to your hand.`,
+		extension: "SHOVEL",
+		rarity: "LEGENDARY"
+    });
+
+var plague = c.newCard({
+		name: "{{PLURAL:$1|Plague of Shadows|Plague of Shadows}}",
+		image: "plague_of_shadows",
+		cost: 3,
+		attack: 3,
+		hp: 3,
+        transparency: true,
+		description: `{{KW:TRANSPARENCY}}. {{KW:DUST}}: Give all enemy monsters -1/-1.`,
+		extension: "SHOVEL",
+		rarity: "TOKEN"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Remnant of Fate|Remnant of Fates}}",
+		image: "remnant_of_fate_breaking",
+		cost: 12,
+		attack: 7,
+		hp: 11,
+        determination: true,
+		description: `{{KW:MAGIC}}: Look at all non-{{rarity:DETERMINATION}} monsters in your dustpile and choose one. Summon a copy of it.`,
+        typeSkin: 1,
+		extension: "SHOVEL",
+		rarity: "DETERMINATION"
+    });
+
+var essence = c.newCard({
+		name: "{{PLURAL:$1|Corrupted Essence|Corrupted Essences}}",
+		image: "corrupted_essence_breaking",
+		cost: 12,
+		attack: 9,
+		hp: 9,
+        determination: true,
+        taunt: true,
+		description: `{{KW:TAUNT}}. {{KW:MAGIC}}: Add the ${potion.me()} artifact and summon the ${plague.me()}.`,
+        typeSkin: 1,
+		extension: "SHOVEL",
+		rarity: "DETERMINATION"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Nightmare Reize|Nightmare Reizes}}",
+		image: "nightmare_reize_breaking",
+		cost: 14,
+		attack: 5,
+		hp: 13,
+        haste: true,
+        determination: true,
+		description: `{{KW:HASTE}}. {{KW:MAGIC}}: Set the stats of all enemy monsters in play to 2/4.`,
+        typeSkin: 1,
+		extension: "SHOVEL",
+		rarity: "DETERMINATION"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Grand Triumvirate|Grand Triumvirates}}",
+		image: "grand_triumvirate_breaking",
+		cost: 12,
+		attack: 4,
+		hp: 10,
+        candy: true,
+        determination: true,
+		description: `{{KW:CANDY}}. Your monsters costing 4 or more {{cost}} 4 less {{gold}} (min: 1).`,
+        typeSkin: 1,
+		extension: "SHOVEL",
+		rarity: "DETERMINATION"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Mirror of Fate|Mirror of Fates}}",
+		image: "mirror_of_fate_breaking",
+		cost: 8,
+		attack: 6,
+		hp: 6,
+        determination: true,
+		description: `{{KW:DELAY}}: Add an exact copy of all non-{{rarity:DETERMINATION}} ally monsters that died this turn to your hand and fully heal them.`,
+        typeSkin: 1,
+		extension: "SHOVEL",
+		rarity: "DETERMINATION"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|King Pridemoor|King Pridemoors}}",
+		image: "king_pridemoor",
+		cost: 5,
+		attack: 4,
+		hp: 2,
+        armor: true,
+		description: `{{KW:ARMOR}}. {{KW:MAGIC}}: Add a {{CARD:705|1}} to your hand and deck.`,
+		extension: "SHOVEL",
+		rarity: "EPIC"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Troupple King|Troupple Kings}}",
+		image: "troupple_king",
+		cost: 7,
+		attack: 2,
+		hp: 7,
+        candy: true,
+		description: `{{KW:CANDY}}. {{KW:TURN-END}}: If this is not damaged, gain +2 {{ATK}}.`,
+		extension: "SHOVEL",
+		rarity: "EPIC"
+    });
+
+var birder = c.newCard({
+		name: "{{PLURAL:$1|Birder|Birders}}",
+		image: "birder",
+		cost: 1,
+		attack: 2,
+		hp: 1,
+        haste: true,
+		description: `{{KW:HASTE}}.`,
+		extension: "SHOVEL",
+		rarity: "TOKEN"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|King Birder|King Birders}}",
+		image: "king_birder",
+		cost: 7,
+		attack: 4,
+		hp: 7,
+        transparency: true,
+		description: `{{KW:TRANSPARENCY}}. {{KW:MAGIC}}: Summon a ${birder.me()}. Whenever this attacks an enemy monster, trigger {{KW:MAGIC}}.`,
+		extension: "SHOVEL",
+		rarity: "EPIC"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Cardia|Cardia}}",
+		image: "cardia",
+		cost: 7,
+		attack: 5,
+		hp: 7,
+		description: `{{KW:MAGIC}}: Look at all {{TRIBE:CRYSTAL|2}} and choose one. Add it to your hand.`,
+		extension: "SHOVEL",
+		rarity: "EPIC"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Giga Cardia|Giga Cardia}}",
+		image: "giga_cardia",
+		cost: 10,
+		attack: 5,
+		hp: 9,
+		description: `{{KW:MAGIC}}: Add all {{TRIBE:CRYSTAL|2}} to your hand and trigger {{KW:TURN-START}}. {{KW:TURN-START}}: Summon a random {{TRIBE:CRYSTAL|1}}.`,
+		extension: "SHOVEL",
+		rarity: "LEGENDARY"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Red Crystal|Red Crystals}}",
+		image: "red_crystal",
+		cost: 5,
+		attack: 4,
+		hp: 4,
+        supportEnabled: true,
+        shockEmabled: true,
+		description: `{{KW:SHOCK}} and {{KW:SUPPORT}}: Gain +1/+1.`,
+        tribes: [crystal],
+		extension: "SHOVEL",
+		rarity: "TOKEN"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Blue Crystal|Blue Crystals}}",
+		image: "blue_crystal",
+		cost: 5,
+		attack: 4,
+		hp: 4,
+        taunt: true,
+		description: `{{KW:TAUNT}}. After this is attacked, give the attacker -2 {{ATK}}.`,
+        tribes: [crystal],
+		extension: "SHOVEL",
+		rarity: "TOKEN"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Green Crystal|Green Crystals}}",
+		image: "green_crystal",
+		cost: 5,
+		attack: 4,
+		hp: 4,
+        transparency: true,
+		description: `{{KW:TRANSPARENCY}}. {{KW:TURN-END}}: Heal 4 {{HP}} to you.`,
+        tribes: [crystal],
+		extension: "SHOVEL",
+		rarity: "TOKEN"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Yellow Crystal|Yellow Crystals}}",
+		image: "yellow_crystal",
+		cost: 5,
+		attack: 4,
+		hp: 4,
+        haste: true,
+		description: `{{KW:HASTE}}. Whenever this attacks, deal 2 {{DMG}} to all other enemies.`,
+        tribes: [crystal],
+		extension: "SHOVEL",
+		rarity: "TOKEN"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Baz|Bazes}}",
+		image: "baz",
+		cost: 7,
+		attack: 4,
+		hp: 6,
+        armor: true,
+        haste: true,
+		description: `{{KW:ARMOR}}. {{KW:HASTE}}. Whenever this attacks a monster, {{KW:PARALYZE}} it.`,
+		extension: "SHOVEL",
+		rarity: "EPIC"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Mr. Hat|Mr. Hats}}",
+		image: "mr_hat",
+		cost: 6,
+		attack: 4,
+		hp: 5,
+		description: `{{KW:NEED}}: You spent {{gold}} on spells last turn. {{KW:MAGIC}}: Draw a spell. If its {{cost}} is higher than 4, set it to 4.`,
+		extension: "SHOVEL",
+		rarity: "EPIC"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Phantom Striker|Phantom Strikers}}",
+		image: "phantom_striker",
+		cost: 5,
+		attack: 4,
+		hp: 4,
+		description: `{{KW:MAGIC}}: Choose a monster in the enemy hand. Give it -1/-2/-2 (min: 0/0/1).`,
+		extension: "SHOVEL",
+		rarity: "EPIC"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Reize|Reizes}}",
+		image: "reize",
+		cost: 6,
+		attack: 4,
+		hp: 4,
+        haste: true,
+		description: `{{KW:HASTE}}. {{KW:MAGIC}}: Deal 2 {{DMG}} to the monsters adjacent to the monster in front of this.`,
+		extension: "SHOVEL",
+		rarity: "EPIC"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Dark Reize|Dark Reizes}}",
+		image: "dark_reize",
+		cost: 5,
+		attack: 3,
+		hp: 5,
+        transparency: true,
+		description: `{{KW:TRANSPARENCY}}. {{KW:TURN-START}}: Deal 2 {{DMG}} to the monster in front of this.`,
+		extension: "SHOVEL",
+		rarity: "EPIC"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Mona|Monas}}",
+		image: "mona",
+		cost: 8,
+		attack: 6,
+		hp: 6,
+		description: `{{KW:MAGIC}}: Choose a non-{{RARITY:DETERMINATION}} ally monster. Add a 3/3/3 copy of it to your hand.`,
+		extension: "SHOVEL",
+		rarity: "EPIC"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Donovan|Donovans}}",
+		image: "donovan2",
+		cost: 6,
+		attack: 6,
+		hp: 6,
+		description: `{{KW:MAGIC}}: {{KW:PROGRAM}} (5): Add the ${locket.me()} artifact.`,
+		extension: "SHOVEL",
+		rarity: "LEGENDARY"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Luan|Luans}}",
+		image: "luan2",
+		cost: 5,
+		attack: 5,
+		hp: 5,
+		description: `{{KW:MAGIC}}: {{KW:PROGRAM}} (3): Deal 2 {{DMG}} to all enemies.`,
+		extension: "SHOVEL",
+		rarity: "EPIC"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Mom|Moms}}",
+		image: "mom",
+		cost: 9,
+		attack: 3,
+		hp: 8,
+		description: `{{KW:MAGIC}}: Restore 3 {{HP}} and give {{KW:CANDY}} to an ally monster.`,
+		extension: "SHOVEL",
+		rarity: "EPIC"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Bard|Bards}}",
+		image: "bard",
+		cost: 4,
+		attack: 4,
+		hp: 3,
+		description: `{{KW:MAGIC}}: Look at 3 random cards in your deck and choose one. Send it to the top of your deck. {{KW:DELAY}}: Give it -2 {{cost}}.`,
+		extension: "SHOVEL",
+		rarity: "EPIC"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Cooper|Coopers}}",
+		image: "cooper",
+		cost: 4,
+		attack: 3,
+		hp: 2,
+        haste: true,
+        loop: 1,
+		description: `{{KW:LOOP}} (1). {{KW:HASTE}}. {{KW:MAGIC}}: Give the copy +3 {{ATK}}.`,
+		extension: "SHOVEL",
+		rarity: "EPIC"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Chester|Chesters}}",
+		image: "chester",
+		cost: 4,
+		attack: 3,
+		hp: 3,
+		description: `{{KW:MAGIC}}: Trigger the {{KW:MAGIC}} effect of an ally monster with a base {{cost}} of 3 or less (chooses random target).`,
+		extension: "SHOVEL",
+		rarity: "EPIC"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Horace|Horaces}}",
+		image: "horace",
+		cost: 7,
+		attack: 7,
+		hp: 7,
+        taunt: true,
+		description: `{{KW:TAUNT}}. {{KW:NEED}}: 5 or less cards in your deck. {{KW:MAGIC}}: Earn 4 {{gold}}.`,
+		extension: "SHOVEL",
+		rarity: "EPIC"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Madame Meeber|Madame Meebers}}",
+		image: "madame_meeber",
+		cost: 7,
+		attack: 5,
+		hp: 5,
+		description: `{{KW:SPELLPOWER}} (2). {{KW:MAGIC}}: Look at 3 random spells and choose one to add to your hand.`,
+		extension: "SHOVEL",
+		rarity: "EPIC"
+    });
+
+var fairy = c.newCard({
+		name: "{{PLURAL:$1|Fairies|Fairies}}",
+		image: "fairies",
+		cost: 4,
+		attack: 3,
+		hp: 3,
+        loop: 4,
+		description: `{{KW:LOOP}} (4). {{KW:MAGIC}}: Give the copy +1/+1/+1 base stats and the following effects for each {{KW:LOOP}} missing: {{KW:TAUNT}}, {{KW:CANDY}}, {{KW:HASTE}}, {{KW:DODGE}} (1).`,
+		extension: "SHOVEL",
+		rarity: "TOKEN"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Casual Meeber|Casual Meebers}}",
+		image: "casual_meeber",
+		cost: 5,
+		attack: 4,
+		hp: 5,
+		description: `{{KW:DELAY}}: Add ${fairy.me()} to your hand.`,
+		extension: "SHOVEL",
+		rarity: "LEGENDARY"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Percy|Percys}}",
+		image: "percy",
+		cost: 3,
+		attack: 2,
+		hp: 3,
+		description: `{{KW:TURBO}}: Give a random monster in your hand (besides this) +1/+2`,
+		extension: "SHOVEL",
+		rarity: "RARE"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Terrorpin|Terrorpins}}",
+		image: "terrorpin",
+		cost: 6,
+		attack: 4,
+		hp: 3,
+        charge: true,
+        armor: true,
+		description: `{{KW:CHARGE}}. {{KW:ARMOR}}.`,
+		extension: "SHOVEL",
+		rarity: "RARE"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|The Big Creep|The Big Creeps}}",
+		image: "the_big_creep",
+		cost: 6,
+		attack: 3,
+		hp: 6,
+		description: `This takes no {{DMG}} during the enemy turn. {{KW:TURN-START}}: Deal 2 {{DMG}} to this.`,
+		extension: "SHOVEL",
+		rarity: "RARE"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Alchemeister|Alchemeisters}}",
+		image: "the_alchemeister",
+		cost: 7,
+		attack: 4,
+		hp: 4,
+		description: `{{KW:MAGIC}}: Cast the first non-{{RARITY:TOKEN}} spell in your hand (targets the monster in front of this).`,
+		extension: "SHOVEL",
+		rarity: "RARE"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Mole Minion|Mole Minions}}",
+		image: "mole_minion",
+		cost: 5,
+		attack: 3,
+		hp: 5,
+		description: `{{KW:MAGIC}}: Give a monster in your hand {{KW:HASTE}}.`,
+		extension: "SHOVEL",
+		rarity: "RARE"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Dinghy Dropper|Dinghy Droppers}}",
+		image: "dinghy_dropper",
+		cost: 5,
+		attack: 4,
+		hp: 5,
+		description: `{{KW:DUST}}: Add the ${flyingmachine.me()} artifact and give it +1 counter.`,
+		extension: "SHOVEL",
+		rarity: "RARE"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Teethalon|Teethalons}}",
+		image: "teethalon",
+		cost: 6,
+		attack: 4,
+		hp: 4,
+		description: `{{KW:MAGIC}}: Catch the monster in front of this. {{KW:DUST}}: Release it to the opponents hand.`,
+		extension: "SHOVEL",
+		rarity: "RARE"
+    });
+
+// c.newCard({
+//		name: "{{PLURAL:$1|Hurlsvelgr|Hurlsvelgrs}}",
+//		image: "hurlsvelgr",
+//		cost: 1,
+//		attack: 1,
+//		hp: 1,
+//		description: `tbd`,
+//		extension: "SHOVEL",
+//		rarity: "RARE"
+//   });
+
+c.newCard({
+		name: "{{PLURAL:$1|Dozedrake|Dozedrakes}}",
+		image: "dozedrake",
+		cost: 4,
+		attack: 5,
+		hp: 4,
+        cantAttack: true,
+		description: `{{KW:DISARMED}}. {{KW:MAGIC}}: Give adjacent monsters +1/+1.`,
+		extension: "SHOVEL",
+		rarity: "RARE"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Super Skeleton|Super Skeletons}}",
+		image: "super_skeleton",
+		cost: 9,
+		attack: 5,
+		hp: 5,
+		description: `{{KW:MAGIC}}: Deal 4 {{DMG}} to a monster. {{KW:PROGRAM}} (3): Deal 9 {{DMG}} instead.`,
+		extension: "SHOVEL",
+		rarity: "RARE"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Red|Reds}}",
+		image: "red",
+		cost: 3,
+		attack: 3,
+		hp: 3,
+		description: `{{KW:MAGIC}}: Draw a monster. {{KW:PROGRAM}} (2): Give it -1/+1/+1.`,
+		extension: "SHOVEL",
+		rarity: "RARE"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Scarlet|Scarlets}}",
+		image: "scarlet",
+		cost: 5,
+		attack: 3,
+		hp: 6,
+		description: `This can attack twice in one turn. {{KW:MAGIC}}: {{KW:PROGRAM}} (2): Gain {{KW:HASTE}}.`,
+		extension: "SHOVEL",
+		rarity: "RARE"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Missy|Missys}}",
+		image: "missy",
+		cost: 4,
+		attack: 2,
+		hp: 6,
+        supportEnabled: true,
+		description: `{{KW:SUPPORT}}: If the attacker is damaged, {{KW:PROGRAM}} (4): Fully heal the attacker.`,
+		extension: "SHOVEL",
+		rarity: "RARE"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Manny|Mannys}}",
+		image: "manny",
+		cost: 5,
+		attack: 4,
+		hp: 4,
+        loop: 1,
+		description: `{{KW:LOOP}} (1). {{KW:DUST}}: If you have Manny in your dustpile, burn it to send a fully healed exact copy of this to your deck.`,
+		extension: "SHOVEL",
+		rarity: "RARE"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Tadvolt|Tadvolts}}",
+		image: "tadvolt",
+		cost: 5,
+		attack: 3,
+		hp: 3,
+		description: `{{KW:MAGIC}}: Give all ally {{TRIBE:FROGGIT|2}} in your hand with a base {{cost}} of 2 or less {{KW:HASTE}}.`,
+        tribes: [froggit],
+		extension: "SHOVEL",
+		rarity: "COMMON"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Tadfloat|Tadfloats}}",
+		image: "tadfloat",
+		cost: 4,
+		attack: 3,
+		hp: 3,
+        transparency: true,
+		description: `{{KW:TRANSPARENCY}}. {{KW:MAGIC}}: Give -1 {{cost}} to 2 random {{TRIBE:FROGGIT|2}} in your hand.`,
+        tribes: [froggit],
+		extension: "SHOVEL",
+		rarity: "COMMON"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Rat|Rats}}",
+		image: "rat",
+		cost: 2,
+		attack: 1,
+		hp: 3,
+		description: `{{KW:SPELLPOWER}} (1).`,
+        tribes: [rat],
+		extension: "SHOVEL",
+		rarity: "COMMON"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Rat Bombardier|Rat Bombardiers}}",
+		image: "rat_bombardier",
+		cost: 3,
+		attack: 3,
+		hp: 1,
+        dodge: 1,
+		description: `{{KW:DODGE}} (1). {{KW:MAGIC}}: {{KW:SWITCH}}: Gain {{KW:HASTE}} or {{KW:TAUNT}}.`,
+        tribes: [rat],
+		extension: "SHOVEL",
+		rarity: "COMMON"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Ratsploder|Ratsploders}}",
+		image: "ratsploder",
+		cost: 4,
+		attack: 1,
+		hp: 5,
+		description: `{{KW:DUST}}: Deal 3 {{DMG}} to the opponent.`,
+        tribes: [rat],
+		extension: "SHOVEL",
+		rarity: "COMMON"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Propeller Rat|Propeller Rats}}",
+		image: "propeller_rat",
+		cost: 5,
+		attack: 3,
+		hp: 3,
+        transparency: true,
+		description: `{{KW:TRANSPARENCY}}. {{KW:SPELLPOWER}} (1).`,
+        tribes: [rat],
+		extension: "SHOVEL",
+		rarity: "COMMON"
+    });
+
+c.newCard({
+		name: "{{PLURAL:$1|Rat King|Rat Kings}}",
+		image: "rat_king",
+		cost: 5,
+		attack: 4,
+		hp: 4,
+		description: `{{KW:MAGIC}}: Add a copy of all Rats (rarity <= {{RARITY:RARE}}) in your dustpile to your hand with -1 {{cost}}.`,
+        tribes: [rat],
+		extension: "SHOVEL",
+		rarity: "EPIC"
+    });
+
+});
